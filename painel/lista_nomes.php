@@ -1,8 +1,8 @@
 <?php
-// Tela compartilhada de autores/editoras. Espera $campo ('autor'|'editora'), $titulo e $arquivo definidos pelo chamador.
+// Tela compartilhada de autores/editoras/matérias. Espera $campo ('autor'|'editora'|'materia'), $titulo e $arquivo definidos pelo chamador.
 require_once __DIR__ . '/funcoes.php';
 
-if (!in_array($campo, ['autor', 'editora'], true)) {
+if (!in_array($campo, ['autor', 'editora', 'materia'], true)) {
     exit;
 }
 
