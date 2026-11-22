@@ -2,7 +2,7 @@
 
             <!-- LOGO -->
             <div class="headerbar-left">
-                <a href="index.html" class="logo">
+                <a href="index.php" class="logo">
                     <img alt="Logo" src="assets/images/logo.png" />
                     <span>SISTEMA - BIBLIO</span>
                 </a>
@@ -27,14 +27,14 @@
                             <!-- item-->
                             <div class="dropdown-item noti-title">
                                 <h5 class="text-overflow">
-                                    <small>Hello, admin</small>
+                                    <small>Olá, <?php echo e($_SESSION['usuario_nome'] ?? ''); ?></small>
                                 </h5>
                             </div>
 
                             <!-- item-->
-                            <a href="profile.html" class="dropdown-item notify-item">
+                            <a href="index.php" class="dropdown-item notify-item">
                                 <i class="fas fa-user"></i>
-                                <span>Profile</span>
+                                <span>Início</span>
                             </a>
 
                             <!-- item-->

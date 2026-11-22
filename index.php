@@ -14,10 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $erro = 'Informe e-mail/login e senha.';
     } else {
         include 'painel/conexao.php';
-        $stmt = mysqli_prepare($conexao, 'SELECT id, nome, senha FROM usuario WHERE email = ? OR login = ? LIMIT 1');
+        $stmt = mysqli_prepare($conexao, 'SELECT id, nome, cargo, senha FROM usuario WHERE email = ? OR login = ? LIMIT 1');
         mysqli_stmt_bind_param($stmt, 'ss', $identificador, $identificador);
         mysqli_stmt_execute($stmt);
-        mysqli_stmt_bind_result($stmt, $uid, $unome, $uhash);
+        mysqli_stmt_bind_result($stmt, $uid, $unome, $ucargo, $uhash);
         $achou = mysqli_stmt_fetch($stmt);
         mysqli_stmt_close($stmt);
 
@@ -25,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             session_regenerate_id(true);
             $_SESSION['usuario_id'] = $uid;
             $_SESSION['usuario_nome'] = $unome;
+            $_SESSION['usuario_cargo'] = $ucargo;
             header('Location: painel/index.php');
             exit;
         }
@@ -73,10 +74,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit" class="btn btn-block" style="background-color: #fb7e6d;color:#fff">Entrar</button>
       </form>
       <br>
-
-      <center>
-        <a href="signup.php">Cadastre-se</a>
-      </center>
 
     </div>
     <div class="col-md-4"></div>
