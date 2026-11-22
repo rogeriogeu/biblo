@@ -16,8 +16,12 @@ if ($id) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrf_check();
+    if (!$id && preg_match('/^existente:(\d+)$/', $_POST['nome'] ?? '', $mm)) {
+        flash('warning', 'Aluno já cadastrado: edite os dados abaixo em vez de duplicar.');
+        redirecionar('aluno_form.php?id=' . (int) $mm[1]);
+    }
     $a = [
-        'nome' => trim($_POST['nome'] ?? ''),
+        'nome' => trim(preg_replace('/\s+/u', ' ', $_POST['nome'] ?? '')),
         'turma' => trim($_POST['turma'] ?? ''),
         'ensino' => $_POST['ensino'] ?? '',
         'telefone' => trim($_POST['telefone'] ?? ''),
@@ -56,6 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 page_start($id ? 'Editar aluno' : 'Novo aluno');
+$existentes = $id ? [] : consultar('SELECT idestudante, nome, turma FROM estudante ORDER BY nome, turma, idestudante');
 $opcoes = ['turma' => [], 'ensino' => $ensinos];
 foreach (['turma', 'ensino'] as $c) {
     foreach (array_column(consultar("SELECT DISTINCT $c AS v FROM estudante WHERE $c <> '' ORDER BY $c"), 'v') as $v) {
@@ -75,8 +80,18 @@ foreach (['turma', 'ensino'] as $c) {
             <?php echo csrf_field(); ?>
             <input type="hidden" name="id" value="<?php echo $id; ?>">
             <div class="row">
-                <div class="form-group col-md-6"><label>Nome</label>
-                    <input class="form-control" name="nome" required value="<?php echo e($a['nome']); ?>"></div>
+                <div class="form-group col-md-6"><label>Nome<?php echo $id ? '' : ' <small class="text-muted">(selecione um aluno já cadastrado ou digite um novo)</small>'; ?></label>
+                    <?php if ($id) { ?>
+                        <input class="form-control" name="nome" required value="<?php echo e($a['nome']); ?>">
+                    <?php } else { ?>
+                        <select class="form-control" id="aluno-nome" name="nome" required style="width:100%">
+                            <option value=""></option>
+                            <?php foreach ($existentes as $x) { ?>
+                                <option value="existente:<?php echo (int) $x['idestudante']; ?>"><?php echo e($x['nome'] . ' — ' . ($x['turma'] !== '' ? $x['turma'] : 'sem turma')); ?></option>
+                            <?php } ?>
+                            <?php if ($a['nome'] !== '') { ?><option selected><?php echo e($a['nome']); ?></option><?php } ?>
+                        </select>
+                    <?php } ?></div>
                 <?php foreach (['turma' => 'Turma', 'ensino' => 'Tipo de ensino'] as $c => $rot) { ?>
                     <div class="form-group col-md-6"><label><?php echo $rot; ?> <small class="text-muted">(selecione ou digite um novo)</small></label>
                         <select class="form-control select-tags" name="<?php echo $c; ?>" style="width:100%">
@@ -100,4 +115,4 @@ foreach (['turma', 'ensino'] as $c) {
         </form>
     </div>
 </div>
-<?php page_end('<script src="assets/plugins/select2/js/select2.min.js"></script><script>$(".select-tags").select2({tags:true,allowClear:true,placeholder:"Selecione ou digite para cadastrar novo",createTag:function(p){var t=$.trim(p.term);if(t===""){return null;}var low=t.toLowerCase(),ex=null;$(this.$element).find("option").each(function(){if($(this).text().toLowerCase()===low){ex=true;}});return ex?null:{id:t,text:t};}});</script>'); ?>
+<?php page_end('<script src="assets/plugins/select2/js/select2.min.js"></script><script>$(".select-tags").select2({tags:true,allowClear:true,placeholder:"Selecione ou digite para cadastrar novo",createTag:function(p){var t=$.trim(p.term);if(t===""){return null;}var low=t.toLowerCase(),ex=null;$(this.$element).find("option").each(function(){if($(this).text().toLowerCase()===low){ex=true;}});return ex?null:{id:t,text:t};}});$("#aluno-nome").select2({tags:true,allowClear:true,placeholder:"Digite o nome ou selecione um aluno já cadastrado",createTag:function(p){var t=$.trim(p.term);return t===""?null:{id:t,text:t};}}).on("select2:select",function(e){var v=e.params.data.id;if(String(v).indexOf("existente:")===0&&confirm("Este aluno já está cadastrado ("+e.params.data.text+"). Abrir o cadastro dele para editar?")){location.href="aluno_form.php?id="+String(v).split(":")[1];}else if(String(v).indexOf("existente:")===0){$(this).val(null).trigger("change");}});</script>'); ?>
