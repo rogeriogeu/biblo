@@ -8,6 +8,8 @@ $itens = [
     ['autores.php', 'autor', 'fas fa-chalkboard-teacher', 'Autores'],
     ['editoras.php', 'editora', 'fas fa-book-reader', 'Editoras'],
     ['materias.php', 'materia', 'fas fa-chalkboard', 'Matérias'],
+    ['turmas.php', 'turma', 'fas fa-users', 'Turmas'],
+    ['ensinos.php', 'ensino', 'fas fa-school', 'Tipos de ensino'],
 ];
 if (is_admin()) {
     $itens[] = ['usuarios.php', 'usuario', 'fa fa-users', 'Usuários'];
