@@ -1,4 +1,5 @@
 <?php
+require_once 'auth.php';
 include 'conexao.php';
 $idestudante = $_POST['idestudante'];
 $nome= $_POST['nome'];

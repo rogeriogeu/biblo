@@ -1,4 +1,5 @@
 <?php
+require_once 'auth.php';
 include 'conexao.php';
 $name = $_POST['nome'];
 $turma = $_POST['turma'];
