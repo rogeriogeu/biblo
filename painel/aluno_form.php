@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'nome' => trim(preg_replace('/\s+/u', ' ', $_POST['nome'] ?? '')),
         'turma' => trim($_POST['turma'] ?? ''),
         'ensino' => $_POST['ensino'] ?? '',
-        'telefone' => trim($_POST['telefone'] ?? ''),
+        'telefone' => telefone_fmt($_POST['telefone'] ?? ''),
         'condicao' => ($_POST['condicao'] ?? '') === 'Inativo' ? 'Inativo' : 'Ativo',
     ];
     foreach (['turma', 'ensino'] as $c) {
@@ -102,7 +102,7 @@ foreach (['turma', 'ensino'] as $c) {
                         </select></div>
                 <?php } ?>
                 <div class="form-group col-md-6"><label>Telefone</label>
-                    <input class="form-control" name="telefone" value="<?php echo e($a['telefone']); ?>"></div>
+                    <input class="form-control" name="telefone" data-mask="tel" maxlength="14" placeholder="(xx)xxxxx-xxxx" value="<?php echo e(telefone_fmt($a['telefone'])); ?>"></div>
                 <div class="form-group col-md-6"><label>Condição</label>
                     <select class="form-control" name="condicao">
                         <?php foreach (['Ativo', 'Inativo'] as $c) { ?>

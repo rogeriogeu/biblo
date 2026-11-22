@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     foreach (['nome', 'telefone', 'email', 'login'] as $c) {
         $u[$c] = trim($_POST[$c] ?? '');
     }
+    $u['telefone'] = telefone_fmt($u['telefone']);
     $u['cargo'] = in_array($_POST['cargo'] ?? '', $cargos, true) ? $_POST['cargo'] : 'Bibliotecário';
     $senha = $_POST['senha'] ?? '';
 
@@ -67,7 +68,7 @@ page_start($id ? 'Editar usuário' : 'Novo usuário');
                         <?php } ?>
                     </select></div>
                 <div class="form-group col-md-6"><label>Telefone</label>
-                    <input class="form-control" name="telefone" value="<?php echo e($u['telefone']); ?>"></div>
+                    <input class="form-control" name="telefone" data-mask="tel" maxlength="14" placeholder="(xx)xxxxx-xxxx" value="<?php echo e(telefone_fmt($u['telefone'])); ?>"></div>
                 <div class="form-group col-md-6"><label>E-mail</label>
                     <input type="email" class="form-control" name="email" required value="<?php echo e($u['email']); ?>"></div>
                 <div class="form-group col-md-6"><label>Login</label>
