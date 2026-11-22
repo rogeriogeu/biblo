@@ -19,8 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     foreach (['titulo', 'autor', 'editora', 'materia', 'isbn'] as $c) {
         $l[$c] = trim(preg_replace('/\s+/u', ' ', $_POST[$c] ?? ''));
     }
-    // Reaproveita a grafia já cadastrada (sem diferenciar maiúsculas) para não duplicar autor/editora.
-    foreach (['autor', 'editora'] as $c) {
+    // Reaproveita a grafia já cadastrada (sem diferenciar maiúsculas) para não duplicar autor/editora/matéria.
+    foreach (['autor', 'editora', 'materia'] as $c) {
         if ($l[$c] !== '') {
             $existente = consultar("SELECT $c AS v FROM livro WHERE $c = ? ORDER BY idlivro LIMIT 1", 's', [$l[$c]]);
             if ($existente) {
@@ -46,9 +46,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 page_start($id ? 'Editar livro' : 'Novo livro');
-$rotulos = ['titulo' => 'Título', 'materia' => 'Matéria', 'isbn' => 'ISBN'];
+$rotulos = ['titulo' => 'Título', 'isbn' => 'ISBN'];
 $opcoes = [];
-foreach (['autor', 'editora'] as $c) {
+foreach (['autor', 'editora', 'materia'] as $c) {
     $opcoes[$c] = array_column(consultar("SELECT DISTINCT $c AS v FROM livro WHERE $c <> '' ORDER BY $c"), 'v');
     if ($l[$c] !== '' && !in_array($l[$c], $opcoes[$c], true)) {
         $opcoes[$c][] = $l[$c];
@@ -66,7 +66,7 @@ foreach (['autor', 'editora'] as $c) {
                     <div class="form-group col-md-6"><label><?php echo $rot; ?></label>
                         <input class="form-control" name="<?php echo $c; ?>"<?php echo $c === 'titulo' ? ' required' : ''; ?> value="<?php echo e($l[$c]); ?>"></div>
                 <?php } ?>
-                <?php foreach (['autor' => 'Autor', 'editora' => 'Editora'] as $c => $rot) { ?>
+                <?php foreach (['autor' => 'Autor', 'editora' => 'Editora', 'materia' => 'Matéria'] as $c => $rot) { ?>
                     <div class="form-group col-md-6"><label><?php echo $rot; ?> <small class="text-muted">(selecione ou digite um novo)</small></label>
                         <select class="form-control select-tags" name="<?php echo $c; ?>" style="width:100%">
                             <option value=""></option>
