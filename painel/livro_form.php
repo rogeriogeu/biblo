@@ -83,4 +83,4 @@ foreach (['autor', 'editora', 'materia'] as $c) {
         </form>
     </div>
 </div>
-<?php page_end('<script src="assets/plugins/select2/js/select2.min.js"></script><script>$(".select-tags").select2({tags:true,allowClear:true,placeholder:"Selecione ou digite para cadastrar novo",createTag:function(p){var t=$.trim(p.term);if(t===""){return null;}var low=t.toLowerCase(),ex=null;$(this.$element).find("option").each(function(){if($(this).text().toLowerCase()===low){ex=true;}});return ex?null:{id:t,text:t};}});</script>'); ?>
+<?php page_end('<script src="assets/plugins/select2/js/select2.min.js"></script><script>$(".select-tags").select2({width:"100%",tags:true,allowClear:true,placeholder:"Selecione ou digite para cadastrar novo",createTag:function(p){var t=$.trim(p.term);if(t===""){return null;}var low=t.toLowerCase(),ex=null;$(this.$element).find("option").each(function(){if($(this).text().toLowerCase()===low){ex=true;}});return ex?null:{id:t,text:t};}});</script>'); ?>
