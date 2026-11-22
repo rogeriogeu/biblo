@@ -41,7 +41,7 @@ page_start('Usuários');
                 <tr>
                     <td><?php echo e($u['nome']); ?></td>
                     <td><?php echo e($u['cargo']); ?></td>
-                    <td><?php echo e($u['telefone']); ?></td>
+                    <td><?php echo e(telefone_fmt($u['telefone'])); ?></td>
                     <td><?php echo e($u['email']); ?></td>
                     <td><?php echo e($u['login']); ?></td>
                     <td class="text-right">

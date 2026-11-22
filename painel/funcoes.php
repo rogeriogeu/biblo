@@ -93,6 +93,18 @@ function data_br(?string $d): string
     return $d ? date('d/m/Y', strtotime($d)) : '-';
 }
 
+function telefone_fmt(?string $t): string
+{
+    $d = preg_replace('/\D/', '', (string) $t);
+    if (strlen($d) === 11) {
+        return sprintf('(%s)%s-%s', substr($d, 0, 2), substr($d, 2, 5), substr($d, 7));
+    }
+    if (strlen($d) === 10) {
+        return sprintf('(%s)%s-%s', substr($d, 0, 2), substr($d, 2, 4), substr($d, 6));
+    }
+    return trim((string) $t);
+}
+
 function page_start(string $titulo, string $ativo = ''): void
 {
     csrf_check();
@@ -117,5 +129,5 @@ function page_end(string $scriptExtra = ''): void
 {
     echo '</div></div></div>';
     include __DIR__ . '/footer_base.php';
-    echo $scriptExtra . '</body></html>';
+    echo $scriptExtra . '<script>document.addEventListener("input",function(e){var i=e.target;if(!i.matches||!i.matches("input[data-mask=tel]")){return;}var d=i.value.replace(/\D/g,"").slice(0,11),v=d;if(d.length>10){v="("+d.slice(0,2)+")"+d.slice(2,7)+"-"+d.slice(7);}else if(d.length>6){v="("+d.slice(0,2)+")"+d.slice(2,6)+"-"+d.slice(6);}else if(d.length>2){v="("+d.slice(0,2)+")"+d.slice(2);}else if(d.length>0){v="("+d;}i.value=v;});</script></body></html>';
 }

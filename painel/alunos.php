@@ -41,7 +41,7 @@ page_start('Alunos');
                     <td><?php echo e($a['nome']); ?></td>
                     <td><?php echo e($a['turma']); ?></td>
                     <td><?php echo e($a['ensino']); ?></td>
-                    <td><?php echo e($a['telefone']); ?></td>
+                    <td><?php echo e(telefone_fmt($a['telefone'])); ?></td>
                     <td><span class="badge badge-<?php echo $a['condicao'] === 'Inativo' ? 'secondary' : 'success'; ?>"><?php echo e($a['condicao']); ?></span></td>
                     <td class="text-right">
                         <a class="btn btn-sm btn-info" href="aluno_form.php?id=<?php echo (int) $a['idestudante']; ?>">Editar</a>
