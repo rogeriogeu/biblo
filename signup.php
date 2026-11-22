@@ -1,3 +1,39 @@
+<?php
+$msg = '';
+$ok = false;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $mail = trim($_POST['mail'] ?? '');
+    $senha = $_POST['password'] ?? '';
+    $senha2 = $_POST['password2'] ?? '';
+
+    if (!filter_var($mail, FILTER_VALIDATE_EMAIL) || $senha === '') {
+        $msg = 'Informe um e-mail válido e uma senha.';
+    } elseif ($senha !== $senha2) {
+        $msg = 'Senhas diferentes!';
+    } else {
+        include 'painel/conexao.php';
+        $stmt = mysqli_prepare($conexao, 'SELECT id FROM usuario WHERE email = ? OR login = ? LIMIT 1');
+        mysqli_stmt_bind_param($stmt, 'ss', $mail, $mail);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_store_result($stmt);
+        $existe = mysqli_stmt_num_rows($stmt) > 0;
+        mysqli_stmt_close($stmt);
+
+        if ($existe) {
+            $msg = 'E-mail já cadastrado.';
+        } else {
+            $hash = password_hash($senha, PASSWORD_DEFAULT);
+            $cargo = 'Usuário';
+            $telefone = '';
+            $stmt = mysqli_prepare($conexao, 'INSERT INTO usuario (nome, cargo, telefone, email, login, senha) VALUES (?, ?, ?, ?, ?, ?)');
+            mysqli_stmt_bind_param($stmt, 'ssssss', $mail, $cargo, $telefone, $mail, $mail, $hash);
+            $ok = mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
+            $msg = $ok ? 'Cadastro realizado! Faça login.' : 'Erro ao cadastrar.';
+        }
+    }
+}
+?>
 <html lang="en">
   <head>
     <!-- Required meta tags -->
@@ -22,7 +58,10 @@
       <div class="col-md-4" style="margin-top: 90px">
        
         <br><br>
-       <form action="painel/insert_user.php" method="POST">
+       <form action="signup.php" method="POST">
+        <?php if ($msg !== '') { ?>
+          <div class="alert alert-<?php echo $ok ? 'success' : 'danger'; ?>"><?php echo htmlspecialchars($msg); ?></div>
+        <?php } ?>
         <div class="form-group">
           <label for="exampleInputEmail1"  id="cor">E-Mail</label>
           <input type="email" class="form-control" id="exampleInputEmail1" name = "mail" aria-describedby="emailHelp">
