@@ -32,15 +32,21 @@
                             </div>
 
                             <!-- item-->
-                            <a href="index.php" class="dropdown-item notify-item">
+                            <a href="perfil.php" class="dropdown-item notify-item">
                                 <i class="fas fa-user"></i>
+                                <span>Meu perfil</span>
+                            </a>
+
+                            <!-- item-->
+                            <a href="index.php" class="dropdown-item notify-item">
+                                <i class="fas fa-home"></i>
                                 <span>Início</span>
                             </a>
 
                             <!-- item-->
                             <a href="logout.php" class="dropdown-item notify-item">
                                 <i class="fas fa-power-off"></i>
-                                <span>Logout</span>
+                                <span>Sair</span>
                             </a>
                         </div>
                     </li>
