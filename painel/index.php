@@ -34,23 +34,26 @@ foreach (consultar(
 
 page_start('Dashboard');
 
+$totUsuarios = (int) valor('SELECT COUNT(*) FROM usuario');
 $cards = [
     ['Livros (títulos)', $totLivros, 'fa-book', 'primary', 'livros.php'],
     ['Alunos ativos', $totAlunos, 'fa-user-graduate', 'info', 'alunos.php'],
+    ['Usuários', $totUsuarios, 'fa-users', 'dark', is_admin() ? 'usuarios.php' : 'index.php'],
+    ['Exemplares disponíveis', $disponiveis, 'fa-bookmark', 'secondary', 'livros.php'],
     ['Empréstimos ativos', $ativos, 'fa-laptop', 'warning', 'emprestimos.php?status=ativos'],
     ['Atrasados', $atrasados, 'fa-exclamation-triangle', 'danger', 'emprestimos.php?status=atrasados'],
     ['Devolvidos', $devolvidos, 'fa-check', 'success', 'emprestimos.php?status=devolvidos'],
-    ['Exemplares disponíveis', $disponiveis, 'fa-bookmark', 'secondary', 'livros.php'],
+    ['Total de exemplares', $totExemplares, 'fa-layer-group', 'primary', 'livros.php'],
 ];
 ?>
 <div class="row">
     <?php foreach ($cards as [$rot, $val, $ico, $cor, $link]) { ?>
-        <div class="col-md-6 col-xl-4 mb-3">
-            <a href="<?php echo e($link); ?>" class="text-white">
-                <div class="card-box noradius noborder bg-<?php echo $cor; ?>">
-                    <i class="fa <?php echo $ico; ?> float-right text-white"></i>
+        <div class="col-sm-6 col-xl-3 mb-3">
+            <a href="<?php echo e($link); ?>" class="text-white" style="text-decoration:none">
+                <div class="card-box noradius noborder bg-<?php echo $cor; ?>" style="margin-bottom:0;min-height:150px">
+                    <i class="fa <?php echo $ico; ?> float-right text-white" style="font-size:56px;opacity:.5"></i>
                     <h6 class="text-white text-uppercase m-b-20"><?php echo e($rot); ?></h6>
-                    <h1 class="m-b-20 text-white"><?php echo (int) $val; ?></h1>
+                    <h1 class="m-b-20 text-white" style="font-size:44px;font-weight:700"><?php echo (int) $val; ?></h1>
                 </div>
             </a>
         </div>
