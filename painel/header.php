@@ -6,7 +6,7 @@
     <title>SISTEMA BIBLIO</title>
     <meta name="description" content="Dashboard | Nura Admin">
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php $pwaRaiz = '../'; include __DIR__ . '/../pwa/pwa-head.php'; ?>
     <meta name="author" content="Your website">
 
     <!-- Favicon -->
