@@ -82,6 +82,28 @@ function executar(string $sql, string $tipos = '', array $params = []): int
     return $n;
 }
 
+// Exclui um registro apenas se não houver empréstimo em aberto ($colunaEmp = idlivro|idestudante).
+// Empréstimos já devolvidos são apagados junto, em transação. Devolve false se houver empréstimo ativo.
+function excluir_sem_emprestimo_ativo(string $tabela, string $colunaId, string $colunaEmp, int $id): bool
+{
+    global $conexao;
+    mysqli_begin_transaction($conexao);
+    try {
+        $ativos = (int) valor("SELECT COUNT(*) FROM emprestimo WHERE $colunaEmp = ? AND data_devolucao IS NULL FOR UPDATE", 'i', [$id]);
+        if ($ativos > 0) {
+            mysqli_rollback($conexao);
+            return false;
+        }
+        executar("DELETE FROM emprestimo WHERE $colunaEmp = ?", 'i', [$id]);
+        executar("DELETE FROM $tabela WHERE $colunaId = ?", 'i', [$id]);
+        mysqli_commit($conexao);
+        return true;
+    } catch (mysqli_sql_exception $ex) {
+        mysqli_rollback($conexao);
+        throw $ex;
+    }
+}
+
 function valor(string $sql, string $tipos = '', array $params = [])
 {
     $l = consultar($sql, $tipos, $params);

@@ -5,10 +5,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrf_check();
     $id = (int) ($_POST['id'] ?? 0);
     try {
-        executar('DELETE FROM estudante WHERE idestudante = ?', 'i', [$id]);
-        flash('success', 'Aluno excluído.');
+        if (excluir_sem_emprestimo_ativo('estudante', 'idestudante', 'idestudante', $id)) {
+            flash('success', 'Aluno excluído (histórico de empréstimos devolvidos removido junto).');
+        } else {
+            flash('danger', 'Não é possível excluir: o aluno possui empréstimo em aberto. Registre a devolução primeiro.');
+        }
     } catch (mysqli_sql_exception $ex) {
-        flash('danger', 'Não é possível excluir: o aluno possui empréstimos. Marque-o como Inativo.');
+        flash('danger', 'Não foi possível excluir o aluno.');
     }
     redirecionar('alunos.php');
 }
