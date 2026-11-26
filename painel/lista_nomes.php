@@ -38,25 +38,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $q = trim($_GET['q'] ?? '');
 $itens = consultar(
-    "SELECT MIN($campo) AS nome, COUNT(*) AS total FROM $tabela WHERE $campo <> '' AND $campo LIKE ?
-     GROUP BY $campo ORDER BY nome",
-    's',
-    ['%' . $q . '%']
+    "SELECT MIN($campo) AS nome, COUNT(*) AS total FROM $tabela WHERE $campo <> '' GROUP BY $campo ORDER BY nome"
 );
 
 page_start($titulo);
 ?>
 <div class="card mb-3">
     <div class="card-header">
-        <form class="form-inline" method="GET">
-            <input type="text" name="q" class="form-control mr-2" placeholder="Buscar <?php echo e(strtolower($titulo)); ?>" value="<?php echo e($q); ?>">
-            <button class="btn btn-primary mr-2">Buscar</button>
-            <a href="<?php echo $form; ?>" class="btn btn-success"><?php echo $novoRot; ?></a>
-        </form>
+        <a href="<?php echo $form; ?>" class="btn btn-success"><?php echo $novoRot; ?></a>
         <small class="text-muted">Os nomes são cadastrados ao salvar um <?php echo $un; ?>. Aqui você pode renomear (atualiza todos os <?php echo $pl; ?>; se o novo nome já existir, são unidos) ou remover.</small>
     </div>
     <div class="card-body table-responsive">
-        <table class="table table-striped">
+        <table id="tabela-nomes" class="table table-striped">
             <thead><tr><th>Nome</th><th><?php echo ucfirst($pl); ?></th><th style="width:55%">Ações</th></tr></thead>
             <tbody>
             <?php foreach ($itens as $i) { ?>
@@ -80,9 +73,8 @@ page_start($titulo);
                     </td>
                 </tr>
             <?php } ?>
-            <?php if (!$itens) { ?><tr><td colspan="3" class="text-center">Nenhum registro encontrado.</td></tr><?php } ?>
             </tbody>
         </table>
     </div>
 </div>
-<?php page_end(); ?>
+<?php page_end(datatable_script('#tabela-nomes', ['order' => [[0, 'asc']], 'search' => ['search' => $q], 'columnDefs' => [['orderable' => false, 'searchable' => false, 'targets' => 2]]])); ?>

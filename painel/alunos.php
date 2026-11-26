@@ -14,26 +14,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $q = trim($_GET['q'] ?? '');
-$like = '%' . $q . '%';
 $alunos = consultar(
-    'SELECT idestudante, nome, turma, ensino, telefone, condicao FROM estudante
-     WHERE nome LIKE ? OR turma LIKE ? OR ensino LIKE ? ORDER BY nome',
-    'sss',
-    [$like, $like, $like]
+    'SELECT idestudante, nome, turma, ensino, telefone, condicao FROM estudante ORDER BY nome'
 );
 
 page_start('Alunos');
 ?>
 <div class="card mb-3">
     <div class="card-header">
-        <form class="form-inline" method="GET">
-            <input type="text" name="q" class="form-control mr-2" placeholder="Buscar nome, turma, ensino" value="<?php echo e($q); ?>">
-            <button class="btn btn-primary mr-2">Buscar</button>
-            <a href="aluno_form.php" class="btn btn-success">Novo aluno</a>
-        </form>
+        <a href="aluno_form.php" class="btn btn-success">Novo aluno</a>
     </div>
     <div class="card-body table-responsive">
-        <table class="table table-striped">
+        <table id="tabela-alunos" class="table table-striped">
             <thead><tr><th>Nome</th><th>Turma</th><th>Ensino</th><th>Telefone</th><th>Condição</th><th></th></tr></thead>
             <tbody>
             <?php foreach ($alunos as $a) { ?>
@@ -53,9 +45,8 @@ page_start('Alunos');
                     </td>
                 </tr>
             <?php } ?>
-            <?php if (!$alunos) { ?><tr><td colspan="6" class="text-center">Nenhum aluno encontrado.</td></tr><?php } ?>
             </tbody>
         </table>
     </div>
 </div>
-<?php page_end(); ?>
+<?php page_end(datatable_script('#tabela-alunos', ['order' => [[0, 'asc']], 'search' => ['search' => $q], 'columnDefs' => [['orderable' => false, 'searchable' => false, 'targets' => 5]]])); ?>

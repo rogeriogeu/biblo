@@ -131,3 +131,18 @@ function page_end(string $scriptExtra = ''): void
     include __DIR__ . '/footer_base.php';
     echo '<style>.select2-container{display:block!important;width:100%!important;max-width:100%!important;box-sizing:border-box}.select2-container .select2-selection{width:100%!important}.select2-container .select2-selection--single{height:calc(2.25rem + 2px);border:1px solid #ced4da;border-radius:.25rem}.select2-container--default .select2-selection--single .select2-selection__rendered{line-height:calc(2.25rem);padding-left:.75rem}.select2-container--default .select2-selection--single .select2-selection__arrow{height:calc(2.25rem + 2px)}.select2-container--default .select2-selection--single .select2-selection__clear{margin-right:1.5rem;line-height:calc(2.25rem)}</style>' . $scriptExtra . '<script>document.addEventListener("input",function(e){var i=e.target;if(!i.matches||!i.matches("input[data-mask=tel]")){return;}var d=i.value.replace(/\D/g,"").slice(0,11),v=d;if(d.length>10){v="("+d.slice(0,2)+")"+d.slice(2,7)+"-"+d.slice(7);}else if(d.length>6){v="("+d.slice(0,2)+")"+d.slice(2,6)+"-"+d.slice(6);}else if(d.length>2){v="("+d.slice(0,2)+")"+d.slice(2);}else if(d.length>0){v="("+d;}i.value=v;});</script></body></html>';
 }
+
+function datatable_script(string $seletor, array $opcoes = []): string
+{
+    $base = [
+        'language' => [
+            'search' => 'Buscar:', 'lengthMenu' => 'Mostrar _MENU_ registros', 'info' => 'Mostrando _START_ a _END_ de _TOTAL_ registros',
+            'infoEmpty' => 'Nenhum registro', 'infoFiltered' => '(filtrado de _MAX_)', 'zeroRecords' => 'Nenhum registro encontrado.',
+            'emptyTable' => 'Nenhum registro encontrado.',
+            'paginate' => ['first' => 'Primeiro', 'previous' => 'Anterior', 'next' => 'Próximo', 'last' => 'Último'],
+        ],
+        'pageLength' => 25,
+    ];
+    $json = json_encode($opcoes + $base, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP);
+    return '<script src="assets/plugins/datatables/datatables.min.js"></script><script>$(function(){$(' . json_encode($seletor) . ').DataTable(' . $json . ');});</script>';
+}
