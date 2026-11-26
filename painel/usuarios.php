@@ -38,7 +38,7 @@ page_start('Usuários');
                     <td><?php echo e($u['login']); ?></td>
                     <td class="text-right">
                         <a class="btn btn-sm btn-info" href="usuario_form.php?id=<?php echo (int) $u['id']; ?>">Editar</a>
-                        <form method="POST" class="d-inline" onsubmit="return confirm('Excluir este usuário?');">
+                        <form method="POST" class="d-inline" data-confirm="Excluir este usuário?">
                             <?php echo csrf_field(); ?>
                             <input type="hidden" name="id" value="<?php echo (int) $u['id']; ?>">
                             <button class="btn btn-sm btn-danger">Excluir</button>

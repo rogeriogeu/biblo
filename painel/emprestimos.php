@@ -65,7 +65,7 @@ page_start('Empréstimos/Devoluções');
                     <td class="text-right">
                         <?php if (!$r['data_devolucao']) { ?>
                             <a href="emprestimo_editar.php?id=<?php echo (int) $r['idemprestimo']; ?>" class="btn btn-sm btn-info">Editar/Renovar</a>
-                            <form method="POST" class="d-inline" onsubmit="return confirm('Registrar devolução?');">
+                            <form method="POST" class="d-inline" data-confirm="Registrar devolução?">
                                 <?php echo csrf_field(); ?>
                                 <input type="hidden" name="id" value="<?php echo (int) $r['idemprestimo']; ?>">
                                 <button class="btn btn-sm btn-success">Devolver</button>

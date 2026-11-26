@@ -64,7 +64,7 @@ page_start($titulo);
                             <input class="form-control form-control-sm mr-1" name="novo" required value="<?php echo e($i['nome']); ?>">
                             <button class="btn btn-sm btn-info mr-2">Renomear</button>
                         </form>
-                        <form method="POST" class="d-inline" onsubmit="return confirm('Remover &quot;<?php echo e(addslashes($i['nome'])); ?>&quot; de <?php echo (int) $i['total']; ?> (s)? Os registros não serão excluídos.');">
+                        <form method="POST" class="d-inline" data-confirm="Remover &quot;<?php echo e($i['nome']); ?>&quot; de <?php echo (int) $i['total']; ?> (s)? Os registros não serão excluídos.">
                             <?php echo csrf_field(); ?>
                             <input type="hidden" name="acao" value="excluir">
                             <input type="hidden" name="antigo" value="<?php echo e($i['nome']); ?>">

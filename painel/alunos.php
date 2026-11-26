@@ -40,7 +40,7 @@ page_start('Alunos');
                     <td><span class="badge badge-<?php echo $a['condicao'] === 'Inativo' ? 'secondary' : 'success'; ?>"><?php echo e($a['condicao']); ?></span></td>
                     <td class="text-right">
                         <a class="btn btn-sm btn-info" href="aluno_form.php?id=<?php echo (int) $a['idestudante']; ?>">Editar</a>
-                        <form method="POST" class="d-inline" onsubmit="return confirm('Excluir este aluno?');">
+                        <form method="POST" class="d-inline" data-confirm="Excluir este aluno?">
                             <?php echo csrf_field(); ?>
                             <input type="hidden" name="id" value="<?php echo (int) $a['idestudante']; ?>">
                             <button class="btn btn-sm btn-danger">Excluir</button>
