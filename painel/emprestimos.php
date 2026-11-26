@@ -11,8 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $q = trim($_GET['q'] ?? '');
 $status = $_GET['status'] ?? '';
-$like = '%' . $q . '%';
-$where = '(a.nome LIKE ? OR l.titulo LIKE ?)';
+$where = '1=1';
 if ($status === 'ativos') {
     $where .= ' AND e.data_devolucao IS NULL';
 } elseif ($status === 'atrasados') {
@@ -28,8 +27,6 @@ $lista = consultar(
      JOIN estudante a ON a.idestudante = e.idestudante
      JOIN livro l ON l.idlivro = e.idlivro
      WHERE $where ORDER BY e.data_devolucao IS NOT NULL, e.data_prevista, e.idemprestimo DESC",
-    'ss',
-    [$like, $like]
 );
 
 page_start('Empréstimos/Devoluções');
@@ -37,7 +34,6 @@ page_start('Empréstimos/Devoluções');
 <div class="card mb-3">
     <div class="card-header">
         <form class="form-inline" method="GET">
-            <input type="text" name="q" class="form-control mr-2" placeholder="Buscar aluno ou livro" value="<?php echo e($q); ?>">
             <select name="status" class="form-control mr-2">
                 <?php foreach (['' => 'Todos', 'ativos' => 'Ativos', 'atrasados' => 'Atrasados', 'devolvidos' => 'Devolvidos'] as $v => $r) { ?>
                     <option value="<?php echo $v; ?>"<?php echo $v === $status ? ' selected' : ''; ?>><?php echo $r; ?></option>
@@ -48,7 +44,7 @@ page_start('Empréstimos/Devoluções');
         </form>
     </div>
     <div class="card-body table-responsive">
-        <table class="table table-striped">
+        <table id="tabela-emprestimos" class="table table-striped">
             <thead><tr><th>Aluno</th><th>Livro</th><th>Empréstimo</th><th>Previsto</th><th>Devolução</th><th>Situação</th><th></th></tr></thead>
             <tbody>
             <?php foreach ($lista as $r) {
@@ -78,9 +74,8 @@ page_start('Empréstimos/Devoluções');
                     </td>
                 </tr>
             <?php } ?>
-            <?php if (!$lista) { ?><tr><td colspan="7" class="text-center">Nenhum empréstimo encontrado.</td></tr><?php } ?>
             </tbody>
         </table>
     </div>
 </div>
-<?php page_end(); ?>
+<?php page_end(datatable_script('#tabela-emprestimos', ['order' => [[0, 'asc']], 'search' => ['search' => $q], 'columnDefs' => [['orderable' => false, 'searchable' => false, 'targets' => 6]]])); ?>

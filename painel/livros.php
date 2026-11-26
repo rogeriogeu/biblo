@@ -14,29 +14,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $q = trim($_GET['q'] ?? '');
-$like = '%' . $q . '%';
 $livros = consultar(
     'SELECT l.idlivro, l.titulo, l.autor, l.editora, l.materia, l.isbn, l.quantidade,
             l.quantidade - (SELECT COUNT(*) FROM emprestimo e WHERE e.idlivro = l.idlivro AND e.data_devolucao IS NULL) AS disponiveis
-     FROM livro l
-     WHERE l.titulo LIKE ? OR l.autor LIKE ? OR l.editora LIKE ? OR l.materia LIKE ? OR l.isbn LIKE ?
-     ORDER BY l.titulo',
-    'sssss',
-    [$like, $like, $like, $like, $like]
+     FROM livro l ORDER BY l.titulo'
 );
 
 page_start('Livros');
 ?>
 <div class="card mb-3">
     <div class="card-header">
-        <form class="form-inline" method="GET">
-            <input type="text" name="q" class="form-control mr-2" placeholder="Buscar título, autor, editora, matéria, ISBN" value="<?php echo e($q); ?>">
-            <button class="btn btn-primary mr-2">Buscar</button>
-            <a href="livro_form.php" class="btn btn-success">Novo livro</a>
-        </form>
+        <a href="livro_form.php" class="btn btn-success">Novo livro</a>
     </div>
     <div class="card-body table-responsive">
-        <table class="table table-striped">
+        <table id="tabela-livros" class="table table-striped">
             <thead><tr><th>Título</th><th>Autor</th><th>Editora</th><th>Matéria</th><th>ISBN</th><th>Qtd.</th><th>Disponíveis</th><th></th></tr></thead>
             <tbody>
             <?php foreach ($livros as $l) { ?>
@@ -58,9 +49,8 @@ page_start('Livros');
                     </td>
                 </tr>
             <?php } ?>
-            <?php if (!$livros) { ?><tr><td colspan="8" class="text-center">Nenhum livro encontrado.</td></tr><?php } ?>
             </tbody>
         </table>
     </div>
 </div>
-<?php page_end(); ?>
+<?php page_end(datatable_script('#tabela-livros', ['order' => [[0, 'asc']], 'search' => ['search' => $q], 'columnDefs' => [['orderable' => false, 'searchable' => false, 'targets' => 7]]])); ?>
