@@ -44,7 +44,7 @@ page_start('Livros');
                     <td><span class="badge badge-<?php echo $l['disponiveis'] > 0 ? 'success' : 'danger'; ?>"><?php echo (int) $l['disponiveis']; ?></span></td>
                     <td class="text-right">
                         <a class="btn btn-sm btn-info" href="livro_form.php?id=<?php echo (int) $l['idlivro']; ?>">Editar</a>
-                        <form method="POST" class="d-inline" onsubmit="return confirm('Excluir este livro?');">
+                        <form method="POST" class="d-inline" data-confirm="Excluir este livro?">
                             <?php echo csrf_field(); ?>
                             <input type="hidden" name="id" value="<?php echo (int) $l['idlivro']; ?>">
                             <button class="btn btn-sm btn-danger">Excluir</button>

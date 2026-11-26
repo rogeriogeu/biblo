@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <br><br>
        <form action="index.php" method="POST">
         <?php if ($erro !== '') { ?>
-          <div class="alert alert-danger"><?php echo htmlspecialchars($erro); ?></div>
+          
         <?php } ?>
         <div class="form-group">
           <label for="exampleInputEmail1" id="cor">E-Mail ou Login</label>
@@ -88,5 +88,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
+<script src="painel/assets/js/jquery.min.js"></script>
+<script src="painel/assets/js/bootstrap.bundle.min.js"></script>
+<link href="painel/assets/font-awesome/css/all.css" rel="stylesheet">
+<?php require_once __DIR__ . '/painel/modal.php'; echo modal_render($erro !== '' ? ['danger', $erro] : null); ?>
 </body>
 </html>
