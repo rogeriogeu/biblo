@@ -5,10 +5,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrf_check();
     $id = (int) ($_POST['id'] ?? 0);
     try {
-        executar('DELETE FROM livro WHERE idlivro = ?', 'i', [$id]);
-        flash('success', 'Livro excluído.');
+        if (excluir_sem_emprestimo_ativo('livro', 'idlivro', 'idlivro', $id)) {
+            flash('success', 'Livro excluído (histórico de empréstimos devolvidos removido junto).');
+        } else {
+            flash('danger', 'Não é possível excluir: o livro possui empréstimo em aberto. Registre a devolução primeiro.');
+        }
     } catch (mysqli_sql_exception $ex) {
-        flash('danger', 'Não é possível excluir: o livro possui empréstimos registrados.');
+        flash('danger', 'Não foi possível excluir o livro.');
     }
     redirecionar('livros.php');
 }
